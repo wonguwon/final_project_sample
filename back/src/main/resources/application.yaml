@@ -21,6 +21,18 @@ mybatis:
     # 컬럼명이 sector_name 처럼 snake_case 여도 자바 필드 sectorName 에 자동 매핑
     map-underscore-to-camel-case: true
 
+# 로그인 토큰 설정
+jwt:
+  # 토큰 서명 키. 32바이트(영문 32자) 미만이면 서버가 시작되지 않는다.
+  # 키 길이에 따라 서명 방식이 자동으로 정해진다 (32~47바이트 HS256, 48~63바이트 HS384, 64바이트 이상 HS512)
+  secret: final-project-sample-secret-key-please-change-0123456789
+  # access token 유효 시간 (30m = 30분, 10s = 10초)
+  access-token-validity: 30m
+  # refresh token 유효 시간 (14d = 14일)
+  refresh-token-validity: 14d
+  # refresh token 쿠키의 Secure 속성. https 에서만 쿠키를 보낸다. 로컬 http 개발에서는 false
+  cookie-secure: false
+
 # 실행되는 SQL 을 콘솔에서 보기 위한 로그 레벨
 logging:
   level:
