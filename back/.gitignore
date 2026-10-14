@@ -1,5 +1,7 @@
 HELP.md
 .gradle
+### 업로드된 파일 (사용자가 올린 파일은 Git 에 올리지 않는다) ###
+uploads/
 build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/

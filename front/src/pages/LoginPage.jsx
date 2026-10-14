@@ -1,7 +1,25 @@
 import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
 import { login } from '../api/authApi';
 import { Button, Form, Input, Label, Message } from '../components/FormElements';
+import { ButtonSpinner } from '../components/Spinner';
+
+const Footer = styled.p`
+  text-align: center;
+  font-size: 14px;
+  color: ${({ theme }) => theme.colors.muted};
+
+  a {
+    margin-left: 6px;
+    font-weight: 700;
+    color: ${({ theme }) => theme.colors.primary};
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+`;
 
 function LoginPage() {
   const [form, setForm] = useState({ loginId: '', password: '' });
@@ -51,9 +69,17 @@ function LoginPage() {
       </Label>
       {error && <Message $error>{error}</Message>}
       <Button type="submit" disabled={submitting}>
-        {submitting ? '로그인 중…' : '로그인'}
+        {submitting ? (
+          <>
+            <ButtonSpinner /> 로그인 중
+          </>
+        ) : (
+          '로그인'
+        )}
       </Button>
-      <Link to="/signup">회원가입</Link>
+      <Footer>
+        <Link to="/signup">회원가입</Link>
+      </Footer>
     </Form>
   );
 }

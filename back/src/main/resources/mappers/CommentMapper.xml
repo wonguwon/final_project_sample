@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kh.back.comment.mapper.CommentMapper">
+
+    <!-- 오래된 댓글이 위로 -->
+    <select id="findByPostId" resultType="CommentDto">
+        SELECT cm.comment_id, cm.post_id, cm.member_id, m.nickname, cm.content, cm.created_at
+        FROM comment cm
+        JOIN member m ON m.member_id = cm.member_id
+        WHERE cm.post_id = #{postId}
+        ORDER BY cm.comment_id
+    </select>
+
+    <select id="findById" resultType="CommentDto">
+        SELECT cm.comment_id, cm.post_id, cm.member_id, m.nickname, cm.content, cm.created_at
+        FROM comment cm
+        JOIN member m ON m.member_id = cm.member_id
+        WHERE cm.comment_id = #{commentId}
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="commentId" keyColumn="comment_id">
+        INSERT INTO comment (post_id, member_id, content)
+        VALUES (#{postId}, #{memberId}, #{content})
+    </insert>
+
+    <delete id="delete">
+        DELETE FROM comment WHERE comment_id = #{commentId}
+    </delete>
+
+</mapper>

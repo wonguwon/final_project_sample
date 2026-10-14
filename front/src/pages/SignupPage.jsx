@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { signup } from '../api/authApi';
 import { Button, Form, Input, Label, Message } from '../components/FormElements';
+import { ButtonSpinner } from '../components/Spinner';
 
 function SignupPage() {
   const [form, setForm] = useState({ loginId: '', password: '', passwordConfirm: '', nickname: '' });
@@ -66,7 +67,13 @@ function SignupPage() {
       </Label>
       {error && <Message $error>{error}</Message>}
       <Button type="submit" disabled={submitting}>
-        {submitting ? '가입 중…' : '가입하기'}
+        {submitting ? (
+          <>
+            <ButtonSpinner /> 가입 중
+          </>
+        ) : (
+          '가입하기'
+        )}
       </Button>
     </Form>
   );

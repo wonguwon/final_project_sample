@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kh.back.post.mapper.PostFileMapper">
+
+    <select id="findByPostId" resultType="PostFileDto">
+        SELECT file_id, post_id, original_name, stored_name, content_type, file_size
+        FROM post_file
+        WHERE post_id = #{postId}
+        ORDER BY file_id
+    </select>
+
+    <select id="findById" resultType="PostFileDto">
+        SELECT file_id, post_id, original_name, stored_name, content_type, file_size
+        FROM post_file
+        WHERE file_id = #{fileId}
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="fileId" keyColumn="file_id">
+        INSERT INTO post_file (post_id, original_name, stored_name, content_type, file_size)
+        VALUES (#{postId}, #{originalName}, #{storedName}, #{contentType}, #{fileSize})
+    </insert>
+
+    <delete id="delete">
+        DELETE FROM post_file WHERE file_id = #{fileId}
+    </delete>
+
+</mapper>

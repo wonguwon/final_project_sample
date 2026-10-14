@@ -7,6 +7,11 @@ spring:
     username: server
     password: server
     driver-class-name: com.mysql.cj.jdbc.Driver
+  # 파일 업로드 크기 제한
+  servlet:
+    multipart:
+      max-file-size: 10MB      # 파일 하나
+      max-request-size: 50MB   # 요청 하나 전체 (파일 여러 개 + 글 내용)
 
 # 서버 포트 (React 의 vite.config.js API_TARGET 과 같아야 한다)
 server:
@@ -32,6 +37,11 @@ jwt:
   refresh-token-validity: 14d
   # refresh token 쿠키의 Secure 속성. https 에서만 쿠키를 보낸다. 로컬 http 개발에서는 false
   cookie-secure: false
+
+# 업로드한 파일을 저장할 폴더.
+# 상대 경로는 "서버를 실행한 위치" 기준이다 (IntelliJ 실행 → back 폴더, java -jar → 명령을 실행한 폴더)
+file:
+  upload-dir: ./uploads
 
 # 실행되는 SQL 을 콘솔에서 보기 위한 로그 레벨
 logging:

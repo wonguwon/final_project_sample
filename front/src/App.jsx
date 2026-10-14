@@ -9,6 +9,9 @@ import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import MyPage from './pages/MyPage';
 import NotFound from './pages/NotFound';
+import PostDetailPage from './pages/PostDetailPage';
+import PostFormPage from './pages/PostFormPage';
+import PostListPage from './pages/PostListPage';
 import PredictPage from './pages/PredictPage';
 import SearchPage from './pages/SearchPage';
 import SignupPage from './pages/SignupPage';
@@ -33,10 +36,14 @@ function App() {
         <Route path="/predict" element={<PredictPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
+        <Route path="/posts" element={<PostListPage />} />
+        <Route path="/posts/:postId" element={<PostDetailPage />} />
 
         {/* 로그인한 사람만 들어갈 수 있는 화면 */}
         <Route element={<RequireAuth />}>
           <Route path="/mypage" element={<MyPage />} />
+          <Route path="/posts/new" element={<PostFormPage />} />
+          <Route path="/posts/:postId/edit" element={<PostFormPage />} />
         </Route>
       </Route>
       <Route path="*" element={<NotFound />} />

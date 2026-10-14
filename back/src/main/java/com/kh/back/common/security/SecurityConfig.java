@@ -4,6 +4,7 @@ import com.kh.back.common.jwt.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -39,6 +40,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/v1/auth/**").permitAll()       // 회원가입 · 로그인 · 재발급 · 로그아웃
                         .requestMatchers("/api/v1/companies/**").permitAll()  // 종목 조회는 누구나
+                        // 게시글 · 댓글 · 첨부 파일 "조회"는 누구나 (작성 · 수정 · 삭제는 아래 규칙으로 로그인 필요)
+                        // <img src> 나 다운로드 링크는 Authorization 헤더를 실을 수 없으므로 파일 조회는 반드시 공개해야 한다
+                        .requestMatchers(HttpMethod.GET, "/api/v1/posts/**").permitAll()
                         .anyRequest().authenticated())                        // 나머지는 로그인 필요
 
                 // ④ 인증이 필요한데 없을 때의 응답 → 401 실패 봉투

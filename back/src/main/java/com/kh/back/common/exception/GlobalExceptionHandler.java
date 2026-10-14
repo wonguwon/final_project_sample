@@ -12,6 +12,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
@@ -64,6 +65,13 @@ public class GlobalExceptionHandler {
         String errorMessage = e.getBindingResult().getAllErrors().get(0).getDefaultMessage();
         return ResponseEntity.badRequest()
                 .body(ApiResponse.fail("BAD_REQUEST", errorMessage));
+    }
+
+    // 업로드 파일이 application.yaml 의 크기 제한(spring.servlet.multipart)을 넘음 → 413
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public ResponseEntity<ApiResponse<Void>> handleUploadSize(MaxUploadSizeExceededException e) {
+        return ResponseEntity.status(HttpStatus.CONTENT_TOO_LARGE)
+                .body(ApiResponse.fail("FILE_TOO_LARGE", "파일 크기가 너무 큽니다. (파일 하나 10MB, 전체 50MB 까지)"));
     }
 
     // 그 밖의 모든 예외 → 500 Internal Server Error

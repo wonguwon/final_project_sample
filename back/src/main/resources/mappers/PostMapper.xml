@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kh.back.post.mapper.PostMapper">
+
+    <!-- 목록 — 종목명(company) · 닉네임(member)은 JOIN, 댓글 수 · 첨부 수는 서브쿼리 -->
+    <select id="findAll" resultType="PostListItem">
+        SELECT p.post_id,
+               p.company_code,
+               c.name AS company_name,
+               p.title,
+               m.nickname,
+               (SELECT COUNT(*) FROM comment cm WHERE cm.post_id = p.post_id) AS comment_count,
+               (SELECT COUNT(*) FROM post_file f WHERE f.post_id = p.post_id) AS file_count,
+               p.created_at
+        FROM post p
+        JOIN company c ON c.code = p.company_code
+        JOIN member m ON m.member_id = p.member_id
+        <where>
+            <if test="code != null and code != ''">
+                p.company_code = #{code}
+            </if>
+        </where>
+        ORDER BY p.post_id DESC
+        LIMIT #{size} OFFSET #{offset}
+    </select>
+
+    <select id="countAll" resultType="int">
+        SELECT COUNT(*) FROM post
+        <where>
+            <if test="code != null and code != ''">
+                company_code = #{code}
+            </if>
+        </where>
+    </select>
+
+    <select id="findDetail" resultType="PostDetail">
+        SELECT p.post_id, p.company_code, c.name AS company_name,
+               p.member_id, m.nickname,
+               p.title, p.content, p.created_at, p.updated_at
+        FROM post p
+        JOIN company c ON c.code = p.company_code
+        JOIN member m ON m.member_id = p.member_id
+        WHERE p.post_id = #{postId}
+    </select>
+
+    <select id="findById" resultType="PostDto">
+        SELECT post_id, company_code, member_id, title, content, created_at, updated_at
+        FROM post
+        WHERE post_id = #{postId}
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="postId" keyColumn="post_id">
+        INSERT INTO post (company_code, member_id, title, content)
+        VALUES (#{companyCode}, #{memberId}, #{title}, #{content})
+    </insert>
+
+    <update id="update">
+        UPDATE post
+        SET title = #{title},
+            content = #{content},
+            updated_at = NOW()
+        WHERE post_id = #{postId}
+    </update>
+
+    <!-- post_file · comment 는 FOREIGN KEY ... ON DELETE CASCADE 로 함께 지워진다 -->
+    <delete id="delete">
+        DELETE FROM post WHERE post_id = #{postId}
+    </delete>
+
+</mapper>
