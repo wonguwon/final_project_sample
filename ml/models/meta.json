@@ -1,0 +1,22 @@
+{
+  "features": [
+    "ret_1d",
+    "ret_5d",
+    "ma5_ratio",
+    "ma20_ratio",
+    "vol20",
+    "volume_ratio",
+    "range_pct",
+    "volume_prev",
+    "close_prev"
+  ],
+  "base_rate": 0.3648,
+  "train_period": [
+    "2023-10-25",
+    "2026-01-16"
+  ],
+  "test_auc": 0.6283,
+  "test_accuracy": 0.6302,
+  "sklearn_version": "1.9.1",
+  "created_at": "2026-10-14 14:41:28"
+}

@@ -43,6 +43,12 @@ jwt:
 file:
   upload-dir: ./uploads
 
+# 예측 서버(FastAPI) 주소와 시간 제한
+ml:
+  base-url: http://localhost:8000
+  connect-timeout: 2s   # 연결이 안 되면 2초 뒤 포기 → 503
+  read-timeout: 5s      # 응답이 5초 안에 안 오면 포기 → 503
+
 # 실행되는 SQL 을 콘솔에서 보기 위한 로그 레벨
 logging:
   level:

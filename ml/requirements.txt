@@ -1,0 +1,14 @@
+# 모델 서빙 (FastAPI)
+fastapi==0.143.0
+uvicorn==0.54.0
+pydantic==2.14.1
+
+# 모델 학습 · 예측 — 학습할 때와 서빙할 때 버전이 같아야 저장한 모델을 불러올 수 있다
+scikit-learn==1.9.1
+numpy==2.5.4
+pandas==3.0.6
+joblib==1.6.0
+
+# 시세 적재 스크립트 (scripts/load_prices.py)
+PyMySQL==1.2.3
+python-dotenv==1.2.4

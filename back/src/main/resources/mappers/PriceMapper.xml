@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kh.back.price.mapper.PriceMapper">
+
+    <!--
+        "최근 30일" 은 날짜 내림차순으로 30개를 고른 뒤(안쪽 SELECT),
+        계산하기 쉽게 다시 오름차순으로 정렬한다(바깥 SELECT).
+        FastAPI 는 시세가 날짜 오름차순으로 온다고 가정하고 이동평균을 계산한다.
+    -->
+    <select id="findRecent" resultType="PriceDto">
+        SELECT date, open, high, low, close, volume
+        FROM (
+            SELECT date, open, high, low, close, volume
+            FROM daily_price
+            WHERE code = #{code}
+            ORDER BY date DESC
+            LIMIT #{limit}
+        ) recent
+        ORDER BY date
+    </select>
+
+</mapper>
