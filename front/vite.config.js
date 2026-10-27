@@ -14,6 +14,11 @@ export default defineConfig({
         target: API_TARGET,
         changeOrigin: true,
       },
+      // 채팅 WebSocket. ws: true 가 있어야 WebSocket 연결을 넘겨준다
+      '/ws': {
+        target: API_TARGET,
+        ws: true,
+      },
     },
   },
 });

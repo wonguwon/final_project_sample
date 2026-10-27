@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kh.back.notification.mapper.NotificationMapper">
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="notificationId" keyColumn="notification_id">
+        INSERT INTO notification (member_id, type, message, link)
+        VALUES (#{memberId}, #{type}, #{message}, #{link})
+    </insert>
+
+    <select id="findById" resultType="NotificationDto">
+        SELECT notification_id, member_id, type, message, link, read_at, created_at
+        FROM notification
+        WHERE notification_id = #{notificationId}
+    </select>
+
+    <select id="findRecent" resultType="NotificationDto">
+        SELECT notification_id, member_id, type, message, link, read_at, created_at
+        FROM notification
+        WHERE member_id = #{memberId}
+        ORDER BY notification_id DESC
+        LIMIT #{size}
+    </select>
+
+    <select id="countUnread" resultType="int">
+        SELECT COUNT(*) FROM notification
+        WHERE member_id = #{memberId} AND read_at IS NULL
+    </select>
+
+    <!-- WHERE 에 member_id 를 함께 → 남의 알림 번호를 넣어도 바뀌지 않는다 -->
+    <update id="markRead">
+        UPDATE notification SET read_at = NOW()
+        WHERE notification_id = #{notificationId} AND member_id = #{memberId} AND read_at IS NULL
+    </update>
+
+    <update id="markAllRead">
+        UPDATE notification SET read_at = NOW()
+        WHERE member_id = #{memberId} AND read_at IS NULL
+    </update>
+
+</mapper>

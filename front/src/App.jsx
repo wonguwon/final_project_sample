@@ -3,6 +3,9 @@ import { Route, Routes } from 'react-router-dom';
 import { refreshAccessToken } from './api/tokenRefresh';
 import Layout from './components/Layout';
 import RequireAuth from './components/RequireAuth';
+import ChatbotPage from './pages/ChatbotPage';
+import ChatRoomListPage from './pages/ChatRoomListPage';
+import ChatRoomPage from './pages/ChatRoomPage';
 import CompanyDetailPage from './pages/CompanyDetailPage';
 import CompanyListPage from './pages/CompanyListPage';
 import HomePage from './pages/HomePage';
@@ -42,6 +45,9 @@ function App() {
         {/* 로그인한 사람만 들어갈 수 있는 화면 */}
         <Route element={<RequireAuth />}>
           <Route path="/mypage" element={<MyPage />} />
+          <Route path="/chat" element={<ChatRoomListPage />} />
+          <Route path="/chat/:roomId" element={<ChatRoomPage />} />
+          <Route path="/chatbot" element={<ChatbotPage />} />
           <Route path="/posts/new" element={<PostFormPage />} />
           <Route path="/posts/:postId/edit" element={<PostFormPage />} />
         </Route>

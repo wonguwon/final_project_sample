@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { getMe } from '../api/memberApi';
-import { Card, Message } from '../components/FormElements';
+import { sendTestNotification } from '../api/notificationApi';
+import { Card, Message, SubButton } from '../components/FormElements';
 import { PageSpinner } from '../components/Spinner';
 
 const Box = styled(Card).attrs({ as: 'section' })`
@@ -35,6 +36,11 @@ const InfoList = styled.dl`
   }
 `;
 
+const TestBar = styled.div`
+  margin-top: 20px;
+  text-align: right;
+`;
+
 // 로그인한 사람만 들어올 수 있다 (App.jsx 에서 RequireAuth 로 감쌌다)
 function MyPage() {
   const [me, setMe] = useState(null);
@@ -61,6 +67,11 @@ function MyPage() {
         <dt>닉네임</dt>
         <dd>{me.nickname}</dd>
       </InfoList>
+
+      {/* 확인용 — 발표 전에 지운다 */}
+      <TestBar>
+        <SubButton onClick={() => sendTestNotification()}>테스트 알림 보내기</SubButton>
+      </TestBar>
     </Box>
   );
 }

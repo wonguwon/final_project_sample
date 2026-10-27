@@ -28,6 +28,11 @@ dependencies {
 	implementation 'io.jsonwebtoken:jjwt-api:0.13.0'
 	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.13.0'
 	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.13.0'
+	// 채팅 — WebSocket + STOMP + simple broker
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+	// 챗봇 — Spring AI (OpenAI). 버전은 BOM 이 한곳에서 정한다
+	implementation platform('org.springframework.ai:spring-ai-bom:2.0.2')
+	implementation 'org.springframework.ai:spring-ai-starter-model-openai'
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'com.mysql:mysql-connector-j'

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kh.back.chat.mapper.ChatMapper">
+
+    <insert id="insertRoom" useGeneratedKeys="true" keyProperty="room.roomId" keyColumn="room_id">
+        INSERT INTO chat_room (title, created_by) VALUES (#{room.title}, #{memberId})
+    </insert>
+
+    <!-- 이미 참여했으면 아무 일도 없다 (PRIMARY KEY (room_id, member_id)) -->
+    <insert id="insertMember">
+        INSERT IGNORE INTO chat_room_member (room_id, member_id) VALUES (#{roomId}, #{memberId})
+    </insert>
+
+    <!-- 방 목록: 참여 인원과 "내가 참여했는지" 를 함께 -->
+    <select id="findRooms" resultType="ChatRoomDto">
+        SELECT r.room_id, r.title, r.created_at,
+               COUNT(rm.member_id) AS member_count,
+               COALESCE(MAX(rm.member_id = #{memberId}), 0) AS joined
+        FROM chat_room r
+        LEFT JOIN chat_room_member rm ON rm.room_id = r.room_id
+        GROUP BY r.room_id, r.title, r.created_at
+        ORDER BY r.room_id DESC
+    </select>
+
+    <select id="findRoom" resultType="ChatRoomDto">
+        SELECT r.room_id, r.title, r.created_at,
+               COUNT(rm.member_id) AS member_count,
+               COALESCE(MAX(rm.member_id = #{memberId}), 0) AS joined
+        FROM chat_room r
+        LEFT JOIN chat_room_member rm ON rm.room_id = r.room_id
+        WHERE r.room_id = #{roomId}
+        GROUP BY r.room_id, r.title, r.created_at
+    </select>
+
+    <select id="countMember" resultType="int">
+        SELECT COUNT(*) FROM chat_room_member
+        WHERE room_id = #{roomId} AND member_id = #{memberId}
+    </select>
+
+    <insert id="insertMessage" useGeneratedKeys="true" keyProperty="messageId" keyColumn="message_id">
+        INSERT INTO chat_message (room_id, sender_id, content)
+        VALUES (#{roomId}, #{senderId}, #{content})
+    </insert>
+
+    <!-- 보여 줄 이름은 member.nickname (로그인 아이디는 보여 주지 않는다) -->
+    <select id="findMessageById" resultType="ChatMessageDto">
+        SELECT cm.message_id, cm.room_id, cm.sender_id, m.nickname AS sender_name, cm.content, cm.created_at
+        FROM chat_message cm
+        JOIN member m ON m.member_id = cm.sender_id
+        WHERE cm.message_id = #{messageId}
+    </select>
+
+    <!-- 최근 size 개를 고른 뒤, 화면에 그릴 순서(오래된 → 최근)로 다시 정렬 -->
+    <select id="findMessages" resultType="ChatMessageDto">
+        SELECT * FROM (
+            SELECT cm.message_id, cm.room_id, cm.sender_id, m.nickname AS sender_name, cm.content, cm.created_at
+            FROM chat_message cm
+            JOIN member m ON m.member_id = cm.sender_id
+            WHERE cm.room_id = #{roomId}
+            <if test="beforeId != null">
+                AND cm.message_id &lt; #{beforeId}
+            </if>
+            ORDER BY cm.message_id DESC
+            LIMIT #{size}
+        ) recent
+        ORDER BY message_id
+    </select>
+
+</mapper>

@@ -7,6 +7,16 @@ spring:
     username: server
     password: server
     driver-class-name: com.mysql.cj.jdbc.Driver
+  # 챗봇 (Spring AI + OpenAI)
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY:no-key}   # 환경변수에서 읽는다. 없으면 no-key (챗봇만 꺼진다). 키 값을 여기에 쓰지 않는다
+      timeout: 30s                        # 30초 안에 답이 없으면 포기
+      max-retries: 1                      # 실패 시 다시 시도는 1번만
+      chat:
+        model: gpt-5.6-luna               # 쓸 수 있는 모델: gpt-5.6-luna · gpt-5.6-sol · gpt-5.6-terra
+    retry:
+      max-attempts: 1                     # Spring AI 쪽 재시도도 끈다 (기본 10번, 최대 3분 대기)
   # 파일 업로드 크기 제한
   servlet:
     multipart:
@@ -48,6 +58,14 @@ ml:
   base-url: http://localhost:8000
   connect-timeout: 2s   # 연결이 안 되면 2초 뒤 포기 → 503
   read-timeout: 5s      # 응답이 5초 안에 안 오면 포기 → 503
+
+# 검색 서버(Elasticsearch) 주소와 시간 제한 — ml: 설정과 같은 모양
+search:
+  es:
+    base-url: http://localhost:9200
+    news-index: news        # 인덱스 이름이 아니라 별칭. 인덱스를 바꿔도 여기는 그대로
+    connect-timeout: 2s
+    read-timeout: 3s
 
 # 실행되는 SQL 을 콘솔에서 보기 위한 로그 레벨
 logging:

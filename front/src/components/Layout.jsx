@@ -2,6 +2,7 @@ import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { logout } from '../api/authApi';
 import useAuthStore from '../stores/useAuthStore';
+import NotificationBell from './NotificationBell';
 
 const Header = styled.header`
   position: sticky;
@@ -119,10 +120,13 @@ function Layout() {
           <NavLink to="/posts">토론</NavLink>
           <NavLink to="/search">뉴스 검색</NavLink>
           <NavLink to="/predict">예측</NavLink>
+          <NavLink to="/chat">채팅</NavLink>
+          <NavLink to="/chatbot">챗봇</NavLink>
 
           <AuthMenu>
             {member ? (
               <>
+                <NotificationBell />
                 <NavLink to="/mypage">{member.nickname} 님</NavLink>
                 <TextButton onClick={handleLogout}>로그아웃</TextButton>
               </>
